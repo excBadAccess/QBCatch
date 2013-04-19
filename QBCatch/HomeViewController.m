@@ -8,22 +8,19 @@
 
 #import "HomeViewController.h"
 #import "common.h"
+#import "Service.h"
 @interface HomeViewController ()
-
+<ReceiveDataDelegate>
+@property (nonatomic, retain) Service *service;
+@property (nonatomic, retain) NSMutableArray *detailControllers;
+@property (nonatomic, retain) NSMutableArray *dataSource;
 @end
 
 @implementation HomeViewController
 
 @synthesize service = _service;
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@synthesize detailControllers = _detailControllers;
+@synthesize dataSource = _dataSource;
 
 - (void)viewDidLoad
 {
@@ -37,21 +34,31 @@
     _service = [[Service alloc] init];
     _service.receiveDelegate = self;
     [_service sendServiceRequest:GET_8H_HOT];
+    
+    self.title = @"糗事百科-8小时精华";
+    _dataSource = [[NSMutableArray alloc] init];
+   _detailControllers = [[NSMutableArray alloc] init];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (void)receiveData:(NSDictionary *)data
 {
     NSLog(@"receiveData");
+    NSArray *items = [data valueForKey:@"items"];
+    self.dataSource = [[[NSMutableArray alloc] initWithArray:items] autorelease];
+    
+//    NSString *content = [[data valueForKey:@"items"] valueForKey:@"content"];
+//    DeleteMeController *deleteController = [[DeleteMeController alloc]
+//                                            initWithStyle:UITableViewStylePlain];
+//    deleteController.title = @"Delete Me";
+//    deleteController.rowImage = [UIImage imageNamed:@"1.jpg"];
+//    [_detailControllers addObject:deleteController];
 }
 
 - (void)dealloc
 {
+//    [_detailControllers release];
+    self.detailControllers = nil;
     _service = nil;
     [super dealloc];
 }
@@ -62,64 +69,30 @@
 {
 #warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    NSLog(@">>%u",_dataSource.count);
+    return _dataSource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"%@",indexPath);
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
+    NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+    NSString *text = [item valueForKey:@"content"];
+    cell.textLabel.text = text;
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 

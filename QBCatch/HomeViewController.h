@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Service.h"
 
-@interface HomeViewController : UITableViewController<ReceiveDataDelegate>
 
-@property (nonatomic, retain) Service *service;
+@interface HomeViewController : UITableViewController
 
 @end

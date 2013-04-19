@@ -40,9 +40,17 @@
 {
     NSLog(@"requestFinished");
     NSLog(@"responseHeaders:%@",request.responseHeaders);
-    NSLog(@"responseData:%@",request.responseData);
-    NSDictionary *dictionary = [[NSDictionary alloc] init];
-    [_receiveDelegate receiveData:dictionary];
+//    NSLog(@"responseData:%@",request.responseData);
+    NSData *responseData = request.responseData;
+    
+    NSDictionary *parserDic = nil;
+    parserDic = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:nil];
+    if (parserDic == nil || ![parserDic isKindOfClass:[NSDictionary class]]) {//Json解析失败或结果非字典
+        NSLog(@"json error");
+        return;
+    }
+    
+    [_receiveDelegate receiveData:parserDic];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request

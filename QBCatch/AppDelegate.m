@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import "HomeViewController.h"
 @implementation AppDelegate
-@synthesize homeViewController = _homeViewController;
+@synthesize navController = _navController;
 - (void)dealloc
 {
     [_window release];
@@ -23,8 +23,11 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-     _homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
-    [self.window addSubview:_homeViewController.view];
+    HomeViewController *homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
+    _navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+    [homeViewController release];
+    self.window.rootViewController = _navController;
+//    [self.window addSubview:_navController.view];
     return YES;
 }
 

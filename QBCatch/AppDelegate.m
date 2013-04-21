@@ -24,10 +24,11 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     HomeViewController *homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
+    homeViewController.title = @"test";
     _navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
-    [homeViewController release];
-    self.window.rootViewController = _navController;
-//    [self.window addSubview:_navController.view];
+//    [homeViewController release];
+//    self.window.rootViewController = _navController;
+    [self.window addSubview:_navController.view];
     return YES;
 }
 

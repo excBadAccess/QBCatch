@@ -9,17 +9,18 @@
 #import "HomeViewController.h"
 #import "common.h"
 #import "Service.h"
+#import "DetailViewController.h"
 @interface HomeViewController ()
 <ReceiveDataDelegate>
 @property (nonatomic, retain) Service *service;
-@property (nonatomic, retain) NSMutableArray *detailControllers;
+@property (nonatomic, retain) DetailViewController *detailController;
 @property (nonatomic, retain) NSMutableArray *dataSource;
 @end
 
 @implementation HomeViewController
 
 @synthesize service = _service;
-@synthesize detailControllers = _detailControllers;
+@synthesize detailController = _detailController;
 @synthesize dataSource = _dataSource;
 
 - (void)viewDidLoad
@@ -37,7 +38,7 @@
     
     self.title = @"糗事百科-8小时精华";
     _dataSource = [[NSMutableArray alloc] init];
-   _detailControllers = [[NSMutableArray alloc] init];
+   _detailController = [[DetailViewController alloc] init];
 }
 
 
@@ -46,7 +47,7 @@
     NSLog(@"receiveData");
     NSArray *items = [data valueForKey:@"items"];
     self.dataSource = [[[NSMutableArray alloc] initWithArray:items] autorelease];
-    
+    [self.tableView reloadData];
 //    NSString *content = [[data valueForKey:@"items"] valueForKey:@"content"];
 //    DeleteMeController *deleteController = [[DeleteMeController alloc]
 //                                            initWithStyle:UITableViewStylePlain];
@@ -58,7 +59,7 @@
 - (void)dealloc
 {
 //    [_detailControllers release];
-    self.detailControllers = nil;
+    self.detailController = nil;
     _service = nil;
     [super dealloc];
 }
@@ -77,7 +78,7 @@
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
     NSLog(@">>%u",_dataSource.count);
-    return _dataSource.count;
+    return 30;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -87,9 +88,15 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
-    NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
-    NSString *text = [item valueForKey:@"content"];
-    cell.textLabel.text = text;
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]
+                initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    if (_dataSource.count > 0) {
+        NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+        NSString *text = [item valueForKey:@"content"];
+        cell.textLabel.text = text;
+    }
     
     return cell;
 }

@@ -20,6 +20,7 @@
 		4E48D282171F934000BA6B0E /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E48D281171F934000BA6B0E /* MobileCoreServices.framework */; };
 		4E48D284171F934A00BA6B0E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E48D283171F934A00BA6B0E /* SystemConfiguration.framework */; };
 		4E48D286171F935200BA6B0E /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E48D285171F935200BA6B0E /* libz.1.2.5.dylib */; };
+		4E9BCD731723002400B65D99 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E9BCD721723002400B65D99 /* DetailViewController.m */; };
 		4E9CDEAD171CF45D008F798C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9CDEAC171CF45D008F798C /* UIKit.framework */; };
 		4E9CDEAF171CF45D008F798C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9CDEAE171CF45D008F798C /* Foundation.framework */; };
 		4E9CDEB1171CF45D008F798C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9CDEB0171CF45D008F798C /* CoreGraphics.framework */; };
@@ -61,6 +62,8 @@
 		4E48D281171F934000BA6B0E /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		4E48D283171F934A00BA6B0E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4E48D285171F935200BA6B0E /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		4E9BCD711723002400B65D99 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		4E9BCD721723002400B65D99 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		4E9CDEA9171CF45D008F798C /* QBCatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QBCatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E9CDEAC171CF45D008F798C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4E9CDEAE171CF45D008F798C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -170,6 +173,8 @@
 				4EA50200171D436200F969D5 /* Service.h */,
 				4EA50201171D436200F969D5 /* Service.m */,
 				4E44BC721720F06E009669CB /* common.h */,
+				4E9BCD711723002400B65D99 /* DetailViewController.h */,
+				4E9BCD721723002400B65D99 /* DetailViewController.m */,
 			);
 			path = QBCatch;
 			sourceTree = "<group>";
@@ -266,6 +271,7 @@
 				4E48D27C171F930500BA6B0E /* ASIInputStream.m in Sources */,
 				4E48D27D171F930500BA6B0E /* ASINetworkQueue.m in Sources */,
 				4E48D27E171F930500BA6B0E /* Reachability.m in Sources */,
+				4E9BCD731723002400B65D99 /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

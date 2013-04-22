@@ -9,17 +9,18 @@
 #import "HomeViewController.h"
 #import "common.h"
 #import "Service.h"
+#import "DetailViewController.h"
 @interface HomeViewController ()
 <ReceiveDataDelegate>
 @property (nonatomic, retain) Service *service;
-@property (nonatomic, retain) NSMutableArray *detailControllers;
+@property (nonatomic, retain) DetailViewController *detailController;
 @property (nonatomic, retain) NSMutableArray *dataSource;
 @end
 
 @implementation HomeViewController
 
 @synthesize service = _service;
-@synthesize detailControllers = _detailControllers;
+@synthesize detailController = _detailController;
 @synthesize dataSource = _dataSource;
 
 - (void)viewDidLoad
@@ -37,7 +38,7 @@
     
     self.title = @"糗事百科-8小时精华";
     _dataSource = [[NSMutableArray alloc] init];
-   _detailControllers = [[NSMutableArray alloc] init];
+   _detailController = [[DetailViewController alloc] init];
 }
 
 
@@ -46,19 +47,12 @@
     NSLog(@"receiveData");
     NSArray *items = [data valueForKey:@"items"];
     self.dataSource = [[[NSMutableArray alloc] initWithArray:items] autorelease];
-    
-//    NSString *content = [[data valueForKey:@"items"] valueForKey:@"content"];
-//    DeleteMeController *deleteController = [[DeleteMeController alloc]
-//                                            initWithStyle:UITableViewStylePlain];
-//    deleteController.title = @"Delete Me";
-//    deleteController.rowImage = [UIImage imageNamed:@"1.jpg"];
-//    [_detailControllers addObject:deleteController];
+    [self.tableView reloadData];
 }
 
 - (void)dealloc
 {
-//    [_detailControllers release];
-    self.detailControllers = nil;
+    self.detailController = nil;
     _service = nil;
     [super dealloc];
 }
@@ -80,19 +74,38 @@
     return _dataSource.count;
 }
 
+- (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    if (_dataSource.count > 0) {
+        NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+        NSString *text = [item valueForKey:@"content"];
+        UIFont *font = [UIFont systemFontOfSize:17.0];
+        CGSize size = [text sizeWithFont:font constrainedToSize:CGSizeMake([[UIScreen mainScreen] bounds].size.width, 1000) lineBreakMode:UILineBreakModeWordWrap];
+        return size.height+50; // 10即消息上下的空间，可自由调整
+    }
+    return 0;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%@",indexPath);
+//    NSLog(@"%@",indexPath);
     static NSString *CellIdentifier = @"HomePageCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[[UITableViewCell alloc]
+                initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
-    NSString *text = [item valueForKey:@"content"];
-    cell.textLabel.text = text;
+    if (_dataSource.count > 0) {
+        NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+        NSString *text = [item valueForKey:@"content"];
+        cell.textLabel.text = text;
+        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.numberOfLines = 0;
+        cell.textLabel.font = [UIFont systemFontOfSize:17.0];
+    }
     
     return cell;
 }

@@ -7,18 +7,27 @@
 //
 
 #import "DetailViewController.h"
-
+#import "common.h"
+#import "Service.h"
 @interface DetailViewController ()
-
+<ReceiveDataDelegate>
+@property (nonatomic, retain) Service *service;
+@property (nonatomic, retain) NSMutableDictionary *dataSource;
+@property (nonatomic, assign) NSInteger qbID;
 @end
 
 @implementation DetailViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize service = _service;
+@synthesize dataSource = _dataSource;
+@synthesize qbID = _qbID;
+
+- (id)initWithStyle:(UITableViewStyle)style withQbID:(NSInteger)qbID
 {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
+        _qbID = qbID;
     }
     return self;
 }
@@ -32,6 +41,39 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self startService:GET_COMMENT setDelegate:self setParam:(id)_qbID];
+}
+
+- (void)startService:(int)serviceID setDelegate:(id)delegate setParam:(id)param
+{
+    _service = [[Service alloc] init];
+    _service.receiveDelegate = delegate;
+    [_service sendServiceRequest:serviceID setParam:param];
+}
+
+- (void)receiveData:(id)data serviceID:(int)ID
+{
+    //    NSLog(@"receiveData");
+    //    self.service = nil;
+    if (ID == GET_COMMENT) {
+        self.dataSource = [[[NSMutableDictionary alloc] initWithDictionary:data] autorelease];
+        [self.tableView reloadData];
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        NSDictionary *item = [items objectAtIndex:indexPath.row];
+        NSString *text = [item valueForKey:@"content"];
+        UIFont *font = [UIFont systemFontOfSize:17.0];
+        CGSize size = [text sizeWithFont:font constrainedToSize:CGSizeMake(
+                        [[UIScreen mainScreen] bounds].size.width, 1000) lineBreakMode:UILineBreakModeWordWrap];
+        return size.height+50; // 10即消息上下的空间，可自由调整
+    }
+    return 200;
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,64 +88,41 @@
 {
 #warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        return items.count;
+    }
     return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    static NSString *CellIdentifier = @"CommentCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
-    
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc]
+                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    }
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        NSDictionary *item = [items objectAtIndex:indexPath.row];
+        NSString *text = [item valueForKey:@"content"];
+        cell.textLabel.text = text;
+        cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+        cell.textLabel.numberOfLines = 0;
+        cell.textLabel.font = [UIFont systemFontOfSize:17.0];
+    }
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 

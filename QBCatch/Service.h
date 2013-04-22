@@ -11,7 +11,7 @@
 
 @protocol ReceiveDataDelegate <NSObject>
 @optional
-- (void)receiveData:(NSDictionary *)data;
+- (void)receiveData:(id)data serviceID:(int)ID;
 
 @end
 
@@ -20,6 +20,6 @@
 @property (nonatomic, assign) id <ReceiveDataDelegate> receiveDelegate;
 @property (nonatomic, retain) ASIHTTPRequest *request;
 
-- (void)sendServiceRequest:(int)requestID;
+- (void)sendServiceRequest:(int)requestID setParam:(id)param;
 
 @end

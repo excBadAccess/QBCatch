@@ -14,7 +14,7 @@
 <ReceiveDataDelegate>
 @property (nonatomic, retain) Service *service;
 @property (nonatomic, retain) DetailViewController *detailController;
-@property (nonatomic, retain) NSMutableArray *dataSource;
+@property (nonatomic, retain) NSMutableDictionary *dataSource;
 @end
 
 @implementation HomeViewController
@@ -32,22 +32,26 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    _service = [[Service alloc] init];
-    _service.receiveDelegate = self;
-    [_service sendServiceRequest:GET_8H_HOT];
-    
+    [self startService:GET_8H_HOT setDelegate:self setParam:nil];
     self.title = @"糗事百科-8小时精华";
-    _dataSource = [[NSMutableArray alloc] init];
-   _detailController = [[DetailViewController alloc] init];
+    _detailController = [[DetailViewController alloc] init];
 }
 
-
-- (void)receiveData:(NSDictionary *)data
+- (void)startService:(int)serviceID setDelegate:(id)delegate setParam:(id)param
 {
-    NSLog(@"receiveData");
-    NSArray *items = [data valueForKey:@"items"];
-    self.dataSource = [[[NSMutableArray alloc] initWithArray:items] autorelease];
-    [self.tableView reloadData];
+    _service = [[Service alloc] init];
+    _service.receiveDelegate = delegate;
+    [_service sendServiceRequest:serviceID setParam:param];
+}
+
+- (void)receiveData:(id)data serviceID:(int)ID
+{
+//    NSLog(@"receiveData");
+//    self.service = nil;
+    if (ID == GET_8H_HOT) {
+        self.dataSource = [[[NSMutableDictionary alloc] initWithDictionary:data] autorelease];
+        [self.tableView reloadData];
+    }
 }
 
 - (void)dealloc
@@ -70,21 +74,26 @@
 {
 #warning Incomplete method implementation.
     // Return the number of rows in the section.
-    NSLog(@">>%u",_dataSource.count);
-    return _dataSource.count;
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        return items.count;
+    }
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    if (_dataSource.count > 0) {
-        NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        NSDictionary *item = [items objectAtIndex:indexPath.row];
         NSString *text = [item valueForKey:@"content"];
         UIFont *font = [UIFont systemFontOfSize:17.0];
-        CGSize size = [text sizeWithFont:font constrainedToSize:CGSizeMake([[UIScreen mainScreen] bounds].size.width, 1000) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize size = [text sizeWithFont:font constrainedToSize:CGSizeMake(
+                        [[UIScreen mainScreen] bounds].size.width, 1000) lineBreakMode:UILineBreakModeWordWrap];
         return size.height+50; // 10即消息上下的空间，可自由调整
     }
-    return 0;
+    return 200;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,8 +107,9 @@
         cell = [[[UITableViewCell alloc]
                 initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
-    if (_dataSource.count > 0) {
-        NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
+    if (_dataSource != nil) {
+        NSArray *items = [_dataSource valueForKey:@"items"];
+        NSDictionary *item = [items objectAtIndex:indexPath.row];
         NSString *text = [item valueForKey:@"content"];
         cell.textLabel.text = text;
         cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -115,13 +125,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    NSArray *items = [_dataSource valueForKey:@"items"];
+    NSDictionary *item = [items objectAtIndex:indexPath.row];
+    DetailViewController *detailViewController = [[DetailViewController alloc]
+                                                  initWithStyle:UITableViewStylePlain
+                                                  withQbID:[[item valueForKey:@"id"] intValue]];
+    // ...
+    // Pass the selected object to the new view controller.
+    [self.navigationController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
 }
 
 @end

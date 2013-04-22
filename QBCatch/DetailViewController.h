@@ -10,4 +10,6 @@
 
 @interface DetailViewController : UITableViewController
 
+- (id)initWithStyle:(UITableViewStyle)style withQbID:(NSInteger)qbID;
+
 @end

@@ -10,5 +10,6 @@
 #define QBCatch_common_h
 
 #define GET_8H_HOT 1001
+#define GET_COMMENT 1002
 
 #endif

@@ -83,10 +83,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%@",indexPath);
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"HomePageCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
     NSDictionary *item = [_dataSource objectAtIndex:indexPath.row];
     NSString *text = [item valueForKey:@"content"];
     cell.textLabel.text = text;

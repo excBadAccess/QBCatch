@@ -31,6 +31,7 @@
     UITabBarController *rootController = [[[UITabBarController alloc] init] autorelease];
     [rootController setViewControllers:array];
     self.window.rootViewController = rootController;
+    NSLog(@"赵正罡你个大鸭蛋");
     return YES;
 }
 

@@ -9,11 +9,11 @@
 #import "AppDelegate.h"
 #import "HomeViewController.h"
 @implementation AppDelegate
-@synthesize navController = _navController;
+
 - (void)dealloc
 {
     [_window release];
-    
+//    [_homeViewController release];
     [super dealloc];
 }
 
@@ -23,10 +23,14 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    HomeViewController *homeViewController = [[HomeViewController alloc] initWithStyle:UITableViewStylePlain];
-    _navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
-    [homeViewController release];
-    self.window.rootViewController = _navController;
+//    [[NSBundle mainBundle] loadNibNamed:@"TabBarController" owner:self options:nil];
+    
+    HomeViewController *homeViewController = [[[HomeViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+    UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:homeViewController] autorelease];
+    NSArray *array = [NSArray arrayWithObjects:navigationController, nil];
+    UITabBarController *rootController = [[[UITabBarController alloc] init] autorelease];
+    [rootController setViewControllers:array];
+    self.window.rootViewController = rootController;
     return YES;
 }
 

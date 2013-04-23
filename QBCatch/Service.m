@@ -15,42 +15,43 @@
 
 - (void)sendServiceRequest:(int)requestID setParam:(id)param
 {
+    NSURL *url = nil;
     switch (requestID) {
         case GET_8H_HOT:
         {
-            [self send8HotRequest];
-            break;
+            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
         }
+            break;
         case GET_COMMENT:
         {
             int qbID = (int)param;
-            [self sendCommentRequest:qbID];
+            NSString *urlStr = @"http://m2.qiushibaike.com/article/";
+            NSString *qbIDStr = [[[NSString alloc] initWithFormat:@"%d",qbID] autorelease];
+            urlStr = [urlStr stringByAppendingString:qbIDStr];
+            urlStr = [urlStr stringByAppendingString:@"/comments?count=50&page=1"];
+            url = [NSURL URLWithString:urlStr];
         }
+            break;
+        case GET_TRUTH:
+        {
+            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
+        }
+            break;
+        case GET_TRAVELTIME:
+        {
+            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
+        }
+            break;
         default:
             break;
     }
-    
+    [self sendRequest:url withRequestID:requestID];
 }
 
-//获取8小时热门列表
-- (void)send8HotRequest
+- (void)sendRequest:(NSURL *)url withRequestID:(NSInteger)requestID
 {
-    NSURL *url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
     _request = [ASIHTTPRequest requestWithURL:url];
-    _request.tag = GET_8H_HOT;
-    [_request setDelegate:self];
-    [_request startAsynchronous];
-}
-
-- (void)sendCommentRequest:(int)qbID
-{
-    NSString *urlStr = @"http://m2.qiushibaike.com/article/";
-    NSString *qbIDStr = [[[NSString alloc] initWithFormat:@"%d",qbID] autorelease];
-    urlStr = [urlStr stringByAppendingString:qbIDStr];
-    urlStr = [urlStr stringByAppendingString:@"/comments?count=50&page=1"];
-    NSURL *url = [NSURL URLWithString:urlStr];
-    _request = [ASIHTTPRequest requestWithURL:url];
-    _request.tag = GET_COMMENT;
+    _request.tag = requestID;
     [_request setDelegate:self];
     [_request startAsynchronous];
 }
@@ -76,6 +77,8 @@
     switch (request.tag) {
         case GET_8H_HOT:
         case GET_COMMENT:
+        case GET_TRAVELTIME:
+        case GET_TRUTH:
         {
             [self parseJasonData:request];
         }

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 
-@interface HomeViewController : UITableViewController
-
+@interface ListViewController : UITableViewController
+- (id)initWithServiceID:(NSInteger)serviceID;
 @end

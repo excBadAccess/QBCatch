@@ -11,5 +11,7 @@
 
 #define GET_8H_HOT 1001
 #define GET_COMMENT 1002
+#define GET_TRUTH 1003
+#define GET_TRAVELTIME 1004
 
 #endif

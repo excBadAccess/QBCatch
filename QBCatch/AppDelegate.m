@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "HomeViewController.h"
+#import "ListViewController.h"
+#import "common.h"
 @implementation AppDelegate
 
 - (void)dealloc
@@ -25,13 +26,22 @@
     [self.window makeKeyAndVisible];
 //    [[NSBundle mainBundle] loadNibNamed:@"TabBarController" owner:self options:nil];
     
-    HomeViewController *homeViewController = [[[HomeViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
-    UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:homeViewController] autorelease];
-    NSArray *array = [NSArray arrayWithObjects:navigationController, nil];
+    ListViewController *homeViewController = [[[ListViewController alloc] initWithServiceID:GET_8H_HOT] autorelease];
+    homeViewController.title = @"糗事百科-精华";
+    UINavigationController *homeNavigationController = [[[UINavigationController alloc] initWithRootViewController:homeViewController] autorelease];
+    
+    ListViewController *truthViewController = [[[ListViewController alloc] initWithServiceID:GET_TRUTH] autorelease];
+    truthViewController.title = @"有图有真相";
+    UINavigationController *truthNavigationController = [[[UINavigationController alloc] initWithRootViewController:truthViewController] autorelease];
+    
+    ListViewController *traveltimeViewController = [[[ListViewController alloc] initWithServiceID:GET_TRAVELTIME] autorelease];
+    traveltimeViewController.title = @"穿越";
+    UINavigationController *traveltimeNavigationController = [[[UINavigationController alloc] initWithRootViewController:traveltimeViewController] autorelease];
+    
+    NSArray *array = [NSArray arrayWithObjects:homeNavigationController, truthNavigationController, traveltimeNavigationController, nil];
     UITabBarController *rootController = [[[UITabBarController alloc] init] autorelease];
     [rootController setViewControllers:array];
     self.window.rootViewController = rootController;
-    NSLog(@"赵正罡你个大鸭蛋");
     return YES;
 }
 

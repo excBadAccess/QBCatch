@@ -6,22 +6,34 @@
 //  Copyright (c) 2013年 ello. All rights reserved.
 //
 
-#import "HomeViewController.h"
+#import "ListViewController.h"
 #import "common.h"
 #import "Service.h"
 #import "DetailViewController.h"
-@interface HomeViewController ()
+@interface ListViewController ()
 <ReceiveDataDelegate>
 @property (nonatomic, retain) Service *service;
 @property (nonatomic, retain) DetailViewController *detailController;
 @property (nonatomic, retain) NSMutableDictionary *dataSource;
+@property (nonatomic, assign) NSInteger serviceID;
 @end
 
-@implementation HomeViewController
+@implementation ListViewController
 
 @synthesize service = _service;
 @synthesize detailController = _detailController;
 @synthesize dataSource = _dataSource;
+@synthesize serviceID = _serviceID;
+
+- (id)initWithServiceID:(NSInteger)serviceID
+{
+    self = [super init];
+    if (self) {
+        // Custom initialization
+        _serviceID = serviceID;
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -32,8 +44,7 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    [self startService:GET_8H_HOT setDelegate:self setParam:nil];
-    self.title = @"糗事百科-8小时精华";
+    [self startService:_serviceID setDelegate:self setParam:nil];
     _detailController = [[DetailViewController alloc] init];
 }
 
@@ -48,7 +59,7 @@
 {
 //    NSLog(@"receiveData");
 //    self.service = nil;
-    if (ID == GET_8H_HOT) {
+    if (ID == _serviceID) {
         self.dataSource = [[[NSMutableDictionary alloc] initWithDictionary:data] autorelease];
         [self.tableView reloadData];
     }
@@ -99,7 +110,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 //    NSLog(@"%@",indexPath);
-    static NSString *CellIdentifier = @"HomePageCell";
+    static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     // Configure the cell...

@@ -50,7 +50,7 @@
 
 - (void)sendRequest:(NSURL *)url withRequestID:(NSInteger)requestID
 {
-    _request = [ASIHTTPRequest requestWithURL:url];
+    self.request = [ASIHTTPRequest requestWithURL:url];
     _request.tag = requestID;
     [_request setDelegate:self];
     [_request startAsynchronous];
@@ -95,6 +95,7 @@
 
 - (void)dealloc
 {
+    _request.delegate = nil;
     self.request = nil;
     [super dealloc];
 }

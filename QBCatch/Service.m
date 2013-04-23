@@ -34,12 +34,20 @@
             break;
         case GET_TRUTH:
         {
-            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
+            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/imgrank?count=30&page=1"];
         }
             break;
         case GET_TRAVELTIME:
         {
-            url = [NSURL URLWithString:@"http://m2.qiushibaike.com/article/list/week?count=30&page=1"];
+            NSString *urlStr = @"http://m2.qiushibaike.com/article/history/";
+            NSDate *curDate = [NSDate date];//获取当前日期
+            curDate = [NSDate dateWithTimeIntervalSince1970:[curDate timeIntervalSince1970]-365*24*3600];
+            NSDateFormatter *formater = [[ NSDateFormatter alloc] init];
+            [formater setDateFormat:@"yyyy-MM-dd"];//这里去掉 具体时间 保留日期 
+            NSString * curTime = [formater stringFromDate:curDate];
+            urlStr = [urlStr stringByAppendingString:curTime];
+            urlStr = [urlStr stringByAppendingString:@"?count=30&page=1"];
+            url = [NSURL URLWithString:urlStr];
         }
             break;
         default:

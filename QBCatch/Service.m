@@ -45,7 +45,7 @@
 - (void)sendCommentRequest:(int)qbID
 {
     NSString *urlStr = @"http://m2.qiushibaike.com/article/";
-    NSString *qbIDStr = [[NSString alloc] initWithFormat:@"%d",qbID];
+    NSString *qbIDStr = [[[NSString alloc] initWithFormat:@"%d",qbID] autorelease];
     urlStr = [urlStr stringByAppendingString:qbIDStr];
     urlStr = [urlStr stringByAppendingString:@"/comments?count=50&page=1"];
     NSURL *url = [NSURL URLWithString:urlStr];
